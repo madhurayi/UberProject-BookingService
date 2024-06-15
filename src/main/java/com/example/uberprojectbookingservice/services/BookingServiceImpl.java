@@ -1,14 +1,13 @@
 package com.example.uberprojectbookingservice.services;
 
 import com.example.uberprojectbookingservice.apis.LocationServiceApi;
-import com.example.uberprojectbookingservice.dto.CreateBookingDto;
-import com.example.uberprojectbookingservice.dto.CreateBookingResponseDto;
-import com.example.uberprojectbookingservice.dto.DriverLocationDto;
-import com.example.uberprojectbookingservice.dto.NearbyDriversRequestDto;
+import com.example.uberprojectbookingservice.dto.*;
 import com.example.uberprojectbookingservice.repositories.BookingRepository;
+import com.example.uberprojectbookingservice.repositories.DriverRepository;
 import com.example.uberprojectbookingservice.repositories.PassengerRepository;
 import com.example.uberprojectentityservice.models.Booking;
 import com.example.uberprojectentityservice.models.BookingStatus;
+import com.example.uberprojectentityservice.models.Driver;
 import com.example.uberprojectentityservice.models.Passenger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,18 +20,22 @@ import java.util.*;
 
 @Service
 public class BookingServiceImpl implements BookingService{
-        private BookingRepository bookingRepository;
+    private final DriverRepository driverRepository;
+    private BookingRepository bookingRepository;
         private PassengerRepository passengerRepository;
         private RestTemplate restTemplate;
 //        private static final String LOCATION_SERVICE="http://localhost:3005/api/v1/location/nearbydrivers";
         private LocationServiceApi locationServiceApi;
+        private DriverRepository DriverRepository;
 
-        public BookingServiceImpl(BookingRepository bookingRepository, PassengerRepository passengerRepository, LocationServiceApi locationServiceApi) {
+        public BookingServiceImpl(BookingRepository bookingRepository, PassengerRepository passengerRepository,
+                                  LocationServiceApi locationServiceApi, DriverRepository driverRepository) {
             this.bookingRepository = bookingRepository;
             this.passengerRepository = passengerRepository;
             this.restTemplate = new RestTemplate();
             this.locationServiceApi = locationServiceApi;
-
+            this.DriverRepository = driverRepository;
+            this.driverRepository = driverRepository;
         }
 
 
@@ -73,7 +76,21 @@ public class BookingServiceImpl implements BookingService{
                         .build();
         }
 
-        public void processNearbyDriverAsync(NearbyDriversRequestDto nearbyDriversRequestDto) {
+    @Override
+    public UpdateBookingResponseDto updateBooking(UpdateBookingRequestDto requestDto, Long BookingId) {
+       Optional<Driver> driver=driverRepository.findById(requestDto.getDriverId().get());
+       bookingRepository.updateBookingStatusAndDriverById(BookingId,BookingStatus.SCHEDULED,driver.get());
+       Optional<Booking> booking=bookingRepository.findById(BookingId);
+        System.out.println(BookingId);
+        return UpdateBookingResponseDto.builder()
+                .bookingId(BookingId)
+                .status(booking.get().getBookingStatus())
+                .driver(Optional.ofNullable(booking.get().getDriver()))
+                .build();
+    }
+
+
+    public void processNearbyDriverAsync(NearbyDriversRequestDto nearbyDriversRequestDto) {
 //            System.out.println("service entered"+nearbyDriversRequestDto.getLatitude());
             Call<DriverLocationDto[]> call= locationServiceApi.getNearbyDrivers(nearbyDriversRequestDto);
             System.out.println(call.clone());

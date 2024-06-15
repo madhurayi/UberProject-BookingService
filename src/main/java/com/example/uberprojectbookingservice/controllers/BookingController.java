@@ -2,6 +2,8 @@ package com.example.uberprojectbookingservice.controllers;
 
 import com.example.uberprojectbookingservice.dto.CreateBookingDto;
 import com.example.uberprojectbookingservice.dto.CreateBookingResponseDto;
+import com.example.uberprojectbookingservice.dto.UpdateBookingRequestDto;
+import com.example.uberprojectbookingservice.dto.UpdateBookingResponseDto;
 import com.example.uberprojectbookingservice.services.BookingService;
 import com.example.uberprojectentityservice.models.Booking;
 import org.springframework.boot.CommandLineRunner;
@@ -26,6 +28,10 @@ public class BookingController  {
         CreateBookingResponseDto res=bookingService.createBooking(createBookingDto);
         System.out.println("response dto");
         return new ResponseEntity<>(res, HttpStatus.CREATED);
+    }
+    @PatchMapping("/{bookingId}")
+    public ResponseEntity<UpdateBookingResponseDto> updateBooking(@RequestBody UpdateBookingRequestDto updateBookingRequestDto,@PathVariable long bookingId) {
+        return ResponseEntity.ok(bookingService.updateBooking(updateBookingRequestDto,bookingId));
     }
 
 }
