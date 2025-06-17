@@ -33,7 +33,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    implementation 'com.example:UberProject-EntityService:0.0.10-SNAPSHOT'
+    implementation 'com.example:UberProject-EntityService:0.0.16-SNAPSHOT'
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.1.2'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'

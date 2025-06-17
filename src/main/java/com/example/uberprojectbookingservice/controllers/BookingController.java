@@ -1,9 +1,6 @@
 package com.example.uberprojectbookingservice.controllers;
 
-import com.example.uberprojectbookingservice.dto.CreateBookingDto;
-import com.example.uberprojectbookingservice.dto.CreateBookingResponseDto;
-import com.example.uberprojectbookingservice.dto.UpdateBookingRequestDto;
-import com.example.uberprojectbookingservice.dto.UpdateBookingResponseDto;
+import com.example.uberprojectbookingservice.dto.*;
 import com.example.uberprojectbookingservice.services.BookingService;
 import com.example.uberprojectentityservice.models.Booking;
 import org.springframework.boot.CommandLineRunner;
@@ -31,7 +28,14 @@ public class BookingController  {
     }
     @PostMapping("/{bookingId}")
     public ResponseEntity<UpdateBookingResponseDto> updateBooking(@RequestBody UpdateBookingRequestDto updateBookingRequestDto,@PathVariable long bookingId) {
+        System.out.println("entered update booking "+updateBookingRequestDto.getStatus()+updateBookingRequestDto.getDriverId());
         return ResponseEntity.ok(bookingService.updateBooking(updateBookingRequestDto,bookingId));
+    }
+
+    @PostMapping("/attempt")
+    public ResponseEntity<Void> saveBookingAttempt(@RequestBody BookingDriverAttemptDto attemptDto){
+        bookingService.saveBookingAttempt(attemptDto);
+        return ResponseEntity.ok().build();
     }
 
 }

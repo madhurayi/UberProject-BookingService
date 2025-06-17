@@ -1,5 +1,6 @@
 package com.example.uberprojectbookingservice.dto;
 
+import com.example.uberprojectentityservice.models.CarType;
 import com.example.uberprojectentityservice.models.ExactLocation;
 import lombok.*;
 
@@ -12,4 +13,7 @@ public class CreateBookingDto {
     private long passengerId;
     private ExactLocation startLocation;
     private ExactLocation endLocation;
+    private String totalDistance;
+    private CarType vehicleType;
+
 }

@@ -13,8 +13,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
+        Booking getBookingsById(Long bookingId);
+
         @Modifying
         @Transactional
-        @Query("UPDATE Booking b SET b.bookingStatus= :status, b.driver= :driver WHERE b.id=:id")
-        void updateBookingStatusAndDriverById(@Param("id") Long id, @Param("status") BookingStatus status, @Param("driver") Driver driver);
+        @Query("UPDATE Booking b SET b.bookingStatus= :status, b.driver= :driver WHERE b.id=:BookingId")
+        void updateBookingStatusAndDriverById(@Param("BookingId") Long BookingId, @Param("status") BookingStatus status, @Param("driver") Driver driver);
 }
